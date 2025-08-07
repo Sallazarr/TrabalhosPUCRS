@@ -1,11 +1,11 @@
+# Lista com os nomes dos meses e uma lista vazia para armazenar as temperaturas
+meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+         "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+temperatura = []
 
-# Lista dos meses e lista das temperaturas #
-meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-temperatura = [];
 
-#While True para manter um loop de menu#
+# Loop principal,exibe o menu e trata as escolhas do usuário
 while True:
-
     print("\n====== MENU ======")
     print("1 - Inserir temperaturas")
     print("2 - Editar temperatura de um mês")
@@ -14,104 +14,114 @@ while True:
     print("0 - Sair")
     print("==================")
 
-
-#Pega a entrada do usuário e envia para o case correspondente#
+    # Valida a entrada da opção do usuário
     try:
-        inputOpcao = int(input("Digite o número correspondente da opção desejada: "))
-        opcao = inputOpcao
-        
+        opcao = int(input("Digite o número correspondente da opção desejada: "))
     except ValueError:
-        print("Valor inválido, utilize apenas números inteiros")
+        print("Valor inválido, utilize apenas números inteiros.")
         continue
- 
-    #Case 1: faz um loop de 12x, permitindo o usuário inserir 12 temperaturas diferentes, uma para cada mês#
+
+    # Verifica qual opção o usuário escolheu
     match opcao:
-      case 1:
-          if temperatura:
-              confirmar = input("Temperaturas já foram inseridas. Deseja Sobrescrever? (s/n)").lower()
-              if confirmar != "s":
-                  continue
-          temperatura.clear()
-          for i in range(12):
+
+        # Opção 1: Inserção das 12 temperaturas
+        case 1:
+             # Caso já exista alguma temperatura cadastrada, pede confirmação para sobrescrever
+            if temperatura:
+                confirmar = input("Temperaturas já foram inseridas. Deseja sobrescrever? (s/n): ").strip().lower()
+                if confirmar != "s":
+                    continue
+            temperatura.clear()
+
+            for i in range(12):
+                while True:
+                    try:
+                        inputTemperatura = float(input(f"\nInsira a temperatura do mês de {meses[i]}: "))
+                        if inputTemperatura < -60 or inputTemperatura > 50:
+                            print("Temperatura fora do intervalo permitido (-60°C a 50°C).")
+                            continue
+                        temperatura.append(inputTemperatura)
+                        break
+                    except ValueError:
+                        print("Valor inválido! Utilize ponto (.) para casas decimais.")
+
+        # Opção 2: Alterar a temperatura de um mês específico
+        case 2:
+            # Verifica se as temperaturas já foram inseridas antes de permitir edição
+            if not temperatura:
+                print("Você ainda não inseriu as temperaturas. Utilize a opção 1 primeiro.\n")
+                continue
+
             while True:
                 try:
-                    inputTemperatura = float(input(f"\nInsira a temperatura do mês de {meses[i]}: "))
-                    if inputTemperatura < -60 or inputTemperatura > 50:
-                        print("Temperatura fora do valor permitido (-60°C a 50°C)") 
+                    mesSelecionado = int(input("Digite o número do mês que deseja alterar (1 a 12): "))
+                    if mesSelecionado < 1 or mesSelecionado > 12:
+                        print("Número inválido. Escolha um valor entre 1 e 12.")
                         continue
-                    temperatura.append(inputTemperatura)
+
+                    print(
+                        f"Mês selecionado: {meses[mesSelecionado - 1]}\n"
+                        f"Temperatura atual: {temperatura[mesSelecionado - 1]}°C\n"
+                    )
+
+                    while True:
+                        try:
+                            novaTemperatura = float(input(f"Insira a nova temperatura para {meses[mesSelecionado - 1]}: "))
+                            if novaTemperatura < -60 or novaTemperatura > 50:
+                                print("Temperatura fora do intervalo permitido (-60°C a 50°C).")
+                                continue
+                            temperatura[mesSelecionado - 1] = novaTemperatura
+                            print("Temperatura atualizada com sucesso.")
+                            break
+                        except ValueError:
+                            print("Valor inválido! Utilize ponto (.) para casas decimais.")
                     break
                 except ValueError:
-                    print("Valor inválido! (Em caso de temperatura com casa decimal, utilize . ao invés de ,).")
-                    
-      
-      #Case 2: Valida se o usuário já inseriu as temperaturas, se sim, permiti o usuário escolher um mês para alterar sua temperatura             
-      case 2:
-          if not temperatura:
-            print("Parece que você não inseriu as temperaturas ainda, utilize a opção 1 primeiro.\n")
-            continue
-          while True:
-           try:
-              mesSelecionado = int(input("Digite o número do mês que deseja alterar: "))
-              if mesSelecionado < 1 or mesSelecionado > 12:
-                  print("Insira um mês valido")
-                  continue
-              print(
-                  f"Mês selecionado: {meses[mesSelecionado - 1]}\n"
-                  f"Temperatura do mês selecionado: {temperatura[mesSelecionado - 1]}\n")
-              while True:
-               try:   
-                   novaTemperatura = float(input(f"Insira a nova temperatura do mês de {meses[mesSelecionado - 1]}: "))
-                   if novaTemperatura < -60 or novaTemperatura > 50:
-                      print("Temperatura fora do valor permitido (-60°C a 50°C)") 
-                      continue
-                   temperatura[mesSelecionado - 1] = novaTemperatura
-                   print("Temperatura atualizada")
-                   break
-               except ValueError:
-                     print ("Valor inválido! (Em caso de temperatura com casa decimal, utilize . ao invés de ,).")
-                     continue
-              break
-           except ValueError:
-                print("Valor Inválido!")
-                
-      #Case 3: Valida se o usuário já inseriu as temperaturas, se sim, exibe todos os meses e suas temperaturas correspondentes#          
-      case 3:
-          if not temperatura:
-           print("Parece que você não inseriu as temperaturas ainda, utilize a opção 1 primeiro.\n")
-           continue    
-          try:
-              for i in range(12):
-                print(
-                  f"Mês: {meses[i]} || Temperatura: {temperatura[i]}"
-                )
-          except Exception as e:
-            print("Erro ao exibir os dados:", e)
-      
-      #Case 4: Valida se o usuário já inseriu as temperaturas, se sim, calcula e exibe a média das temperaturas, meses escaldantes, mês mais quente e mês menos quente      
-      case 4:
-          if not temperatura:
-           print("Parece que você não inseriu as temperaturas ainda, utilize a opção 1 primeiro.\n")
-           continue    
-          media = sum(temperatura) / 12
-          print(f"\nMédia atual das temperaturas: {media:.2f}°C")
-          
-          mesesEscaldantes = 0
-          for temp in temperatura:
-              if temp > 33:
-                  mesesEscaldantes += 1
-                  
-          print(f"Quantidade de meses escaldantes: {mesesEscaldantes}")        
-            
-          indiceEscaldante = temperatura.index(max(temperatura))
-          indiceMenosQuente = temperatura.index(min(temperatura))        
-          mesMaisQuente = meses[indiceEscaldante]
-          mesMenosQuente = meses[indiceMenosQuente]
-          
-          print(f"Mês mais escaldante do ano: {mesMaisQuente}")
-          print(f"Mês menos quente do ano: {mesMenosQuente}")
-      
-      #Finaliza o programa quebrando o loop#    
-      case 0:
-          print("Finalizando programa...")
-          break  
+                    print("Entrada inválida. Digite apenas números inteiros.")
+
+        # Opção 3: Exibição das temperaturas cadastradas
+        case 3:
+            if not temperatura:
+                print("Você ainda não inseriu as temperaturas. Utilize a opção 1 primeiro.\n")
+                continue
+
+            try:
+                print("\nTemperaturas por mês:")
+                for i in range(12):
+                    print(f"Mês: {meses[i]} || Temperatura: {temperatura[i]}°C")
+            except Exception as e:
+                print("Erro ao exibir os dados:", e)
+
+       # Opção 4: Calcular e mostrar média, meses escaldantes e meses mais quentes e menos quentes
+        case 4:
+            if not temperatura:
+                print("Você ainda não inseriu as temperaturas. Utilize a opção 1 primeiro.\n")
+                continue
+
+            # Cálculo da média das temperaturas
+            media = sum(temperatura) / 12
+            print(f"\nMédia anual das temperaturas: {media:.2f}°C")
+
+            # Contagem de meses com temperaturas acima de 33°C
+            mesesEscaldantes = sum(1 for temp in temperatura if temp > 33)
+            print(f"Quantidade de meses escaldantes: {mesesEscaldantes}")
+
+            # Identificação da maior e menor temperatura
+            temperaturaMax = max(temperatura)
+            temperaturaMin = min(temperatura)
+
+            # Identificação dos nomes dos meses de maior e menor temperatura
+            mesesMaisQuentes = [meses[i] for i, temp in enumerate(temperatura) if temp == temperaturaMax]
+            mesesMenosQuentes = [meses[i] for i, temp in enumerate(temperatura) if temp == temperaturaMin]
+
+            print(f"Mês(es) mais quente(s) com {temperaturaMax}°C: {', '.join(mesesMaisQuentes)}")
+            print(f"Mês(es) menos quente(s) com {temperaturaMin}°C: {', '.join(mesesMenosQuentes)}")
+
+        # Opção 0: Finalização do programa
+        case 0:
+            print("Finalizando o programa...")
+            break
+
+        # Caso inválido: opção não reconhecida
+        case _:
+            print("Opção inválida. Escolha uma opção entre 0 e 4.")
