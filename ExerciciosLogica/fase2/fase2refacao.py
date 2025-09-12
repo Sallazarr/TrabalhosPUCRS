@@ -25,3 +25,8 @@ def carregarArquivo(caminhoCSV='Anexo_Arquivo_Dados_Projeto_Logica_e_programacao
         return None
         
     return registros
+
+def obterInput (prompt, valMin, valMax):
+    while True:
+        try:
+            valor int(input(""))
